@@ -29,11 +29,11 @@ logging.getLogger('urllib3').setLevel(logging.INFO)
 
 os.environ["BYPASS_TOOL_CONSENT"] = "true"
 
-class AutoApprovalHook(HookProvider):
-    def register_hooks(self, registry, **kwargs):
-        registry.add_callback(BeforeToolCallEvent, self.approve)
-    def approve(self, event):
-        return
+# class AutoApprovalHook(HookProvider):
+#     def register_hooks(self, registry, **kwargs):
+#         registry.add_callback(BeforeToolCallEvent, self.approve)
+#     def approve(self, event):
+#         return
 
 
 class StrandsFileAgent:
