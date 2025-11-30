@@ -1,6 +1,10 @@
-# Strands File Agent (AWS Bedrock)
+# Strands Bedrock Agent
 
-A Strands agent with file read and write capabilities, built using the Strands SDK with AWS Bedrock backend.
+A fully autonomous development and program solving agent built using the Strands SDK with AWS Bedrock backend.
+
+[![PyPI version](https://badge.fury.io/py/matrix-coder-agent.svg)](https://badge.fury.io/py/matrix-coder-agent)
+[![Python Support](https://img.shields.io/pypi/pyversions/matrix-coder-agent.svg)](https://pypi.org/project/matrix-coder-agent/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
 
@@ -46,14 +50,28 @@ No additional configuration needed if you already have AWS credentials set up.
 
 ## Installation
 
-1. Navigate to the project directory:
+### From PyPI
+
 ```bash
-cd /app
+pip install matrix-coder-agent
 ```
 
-2. Install dependencies:
+### From Source
+
+1. Clone the repository:
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/yourusername/matrix-coder-agent.git
+cd matrix-coder-agent
+```
+
+2. Install in development mode:
+```bash
+pip install -e .
+```
+
+Or install with development dependencies:
+```bash
+pip install -e ".[dev]"
 ```
 
 This installs:
@@ -63,18 +81,18 @@ This installs:
 
 ## Usage
 
-### Interactive Mode
+### Command Line Interface
 
-Run the agent in interactive mode:
+After installation, run the agent in interactive mode:
 
 ```bash
-python main.py
+matrix-coder-agent
 ```
 
-or
+Or using Python module:
 
 ```bash
-python agent.py
+python -m matrix_coder_agent.agent
 ```
 
 ### Example Commands
@@ -107,7 +125,7 @@ The Strands SDK automatically handles:
 You can also use the agent programmatically in your Python code:
 
 ```python
-from agent import StrandsFileAgent
+from matrix_coder_agent import StrandsFileAgent
 
 # Initialize the agent (uses current AWS credentials)
 agent = StrandsFileAgent(region_name="us-east-1")
@@ -126,7 +144,7 @@ print(response)
 Customize the agent with different models or settings:
 
 ```python
-from agent import StrandsFileAgent
+from matrix_coder_agent import StrandsFileAgent
 
 # Use a different Bedrock model
 agent = StrandsFileAgent(
@@ -162,6 +180,8 @@ This is ideal for automated workflows, CI/CD pipelines, and scenarios where you 
 If you want human-in-the-loop control where the agent requests approval before executing tools:
 
 ```python
+from matrix_coder_agent import StrandsFileAgent
+
 agent = StrandsFileAgent(auto_approve=False)
 ```
 
@@ -184,7 +204,8 @@ The agent comes with a comprehensive system prompt (defined in `prompts.py`) tha
 
 **Viewing the System Prompt:**
 ```python
-from prompts import DEVELOPMENT_AGENT_SYSTEM_PROMPT
+from matrix_coder_agent import DEVELOPMENT_AGENT_SYSTEM_PROMPT
+
 print(DEVELOPMENT_AGENT_SYSTEM_PROMPT)
 ```
 
@@ -193,6 +214,8 @@ print(DEVELOPMENT_AGENT_SYSTEM_PROMPT)
 You can provide your own system prompt when initializing the agent:
 
 ```python
+from matrix_coder_agent import StrandsFileAgent
+
 custom_prompt = """You are a data analysis assistant.
 Use file tools to read datasets and write analysis results.
 Focus on statistical accuracy and clear visualizations."""
@@ -261,13 +284,21 @@ All of this happens automatically - you don't need to implement the agentic loop
 ## Project Structure
 
 ```
-/app/
-├── agent.py              # Strands agent wrapper class
-├── main.py               # Entry point for interactive mode
-├── prompts.py            # System prompts for the agent
-├── requirements.txt      # Python dependencies
-├── .gitignore            # Git ignore rules
-└── README.md             # This file
+matrix-coder-agent/
+├── src/
+│   └── matrix_coder_agent/
+│       ├── __init__.py         # Package initialization
+│       ├── agent.py            # Main agent implementation
+│       └── prompts.py          # System prompts
+├── main.py                     # Local entry point for development
+├── setup.py                    # Package setup configuration
+├── pyproject.toml              # Modern Python project metadata
+├── MANIFEST.in                 # Distribution file inclusions
+├── LICENSE                     # MIT License
+├── PUBLISHING.md               # PyPI publishing guide
+├── requirements.txt            # Python dependencies
+├── .gitignore                  # Git ignore rules
+└── README.md                   # This file
 ```
 
 ## Configuration
@@ -385,6 +416,34 @@ Claude Sonnet 4.5 pricing varies by region. Monitor usage in AWS Cost Explorer a
 - [AWS Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
 - [Anthropic Claude Models](https://www.anthropic.com/claude)
 
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+### Development Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/matrix-coder-agent.git
+cd matrix-coder-agent
+```
+
+2. Install in development mode:
+```bash
+pip install -e ".[dev]"
+```
+
+3. Make your changes in the `src/matrix_coder_agent/` directory
+
+4. Test your changes:
+```bash
+python main.py
+```
+
+### Publishing
+
+See [PUBLISHING.md](PUBLISHING.md) for detailed instructions on publishing to PyPI.
+
 ## License
 
-MIT License - Feel free to modify and use as needed.
+MIT License - See [LICENSE](LICENSE) file for details.
