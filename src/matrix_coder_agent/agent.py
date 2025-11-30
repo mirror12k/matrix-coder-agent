@@ -12,7 +12,7 @@ from strands import Agent
 from strands.models import BedrockModel
 from strands.hooks import BeforeToolCallEvent, HookProvider, HookRegistry
 from strands_tools import file_read, file_write, shell, editor, think, journal
-from prompts import DEVELOPMENT_AGENT_SYSTEM_PROMPT
+from matrix_coder_agent.prompts import DEVELOPMENT_AGENT_SYSTEM_PROMPT
 
 # Configure logging
 logging.basicConfig(
