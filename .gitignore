@@ -51,3 +51,4 @@ htmlcov/
 # Hidden files (except .gitignore)
 .*
 !.gitignore
+!.github

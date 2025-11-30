@@ -2,6 +2,7 @@
 
 A fully autonomous development and program solving agent built using the Strands SDK with AWS Bedrock backend.
 
+[![Build Status](https://github.com/mirror12k/matrix-coder-agent/workflows/Build%20and%20Verify%20Package/badge.svg)](https://github.com/mirror12k/matrix-coder-agent/actions)
 [![PyPI version](https://badge.fury.io/py/matrix-coder-agent.svg)](https://badge.fury.io/py/matrix-coder-agent)
 [![Python Support](https://img.shields.io/pypi/pyversions/matrix-coder-agent.svg)](https://pypi.org/project/matrix-coder-agent/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -285,6 +286,10 @@ All of this happens automatically - you don't need to implement the agentic loop
 
 ```
 matrix-coder-agent/
+├── .github/
+│   ├── workflows/
+│   │   └── build.yml           # GitHub Actions build workflow
+│   └── WORKFLOWS.md            # Workflow documentation
 ├── src/
 │   └── matrix_coder_agent/
 │       ├── __init__.py         # Package initialization
@@ -442,7 +447,7 @@ python main.py
 
 ### Publishing
 
-See [PUBLISHING.md](PUBLISHING.md) for detailed instructions on publishing to PyPI.
+See [PUBLISHING.md](PUBLISHING.md) for detailed instructions on publishing to PyPI manually, or [.github/WORKFLOWS.md](.github/WORKFLOWS.md) for automated publishing with GitHub Actions.
 
 ## License
 

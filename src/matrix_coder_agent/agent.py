@@ -58,11 +58,9 @@ class StrandsFileAgent:
         if region_name is None:
             region_name = 'us-east-1'
 
-        logger.debug(f"Region resolved to: {region_name}")
-
         # Configure default model
         if model_id is None:
-            model_id = "anthropic.claude-3-5-sonnet-20240620-v1:0"
+            model_id = "us.anthropic.claude-sonnet-4-5-20250929-v1:0"
 
         logger.debug(f"Model ID set to: {model_id}")
 
