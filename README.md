@@ -7,9 +7,12 @@ A Strands agent with file read and write capabilities, built using the Strands S
 - **Strands SDK Integration**: Built on the official Strands agents framework
 - **AWS Bedrock Backend**: Uses AWS Bedrock for Claude model invocation
 - **File Operations**: Read and write files using built-in Strands tools
+- **Extended Tool Set**: Includes shell, editor, think, and journal tools for comprehensive development tasks
 - **Automatic Agentic Loop**: Strands handles tool use and multi-turn conversations automatically
 - **Streaming Responses**: Real-time output from Claude
 - **IAM Authentication**: Uses current AWS credentials from environment
+- **Development-Focused System Prompt**: Pre-configured as an autonomous development and program solving agent
+- **Auto-Approval Mode**: Fully autonomous operation without human intervention (enabled by default)
 
 ## Prerequisites
 
@@ -134,6 +137,67 @@ agent = StrandsFileAgent(
 
 # Disable streaming
 agent = StrandsFileAgent(streaming=False)
+
+# Custom system prompt
+agent = StrandsFileAgent(
+    system_prompt="You are a specialized code reviewer. Focus on security and performance."
+)
+
+# Disable auto-approval (require human intervention for tool calls)
+agent = StrandsFileAgent(auto_approve=False)
+```
+
+### Auto-Approval Mode
+
+By default, the agent runs in **autonomous mode** with auto-approval enabled. This means:
+
+- The agent can execute tool calls (file operations, shell commands, etc.) without waiting for human approval
+- No interrupts are raised during tool execution
+- The agent operates completely autonomously to complete tasks
+
+This is ideal for automated workflows, CI/CD pipelines, and scenarios where you trust the agent to operate independently.
+
+**Disabling Auto-Approval:**
+
+If you want human-in-the-loop control where the agent requests approval before executing tools:
+
+```python
+agent = StrandsFileAgent(auto_approve=False)
+```
+
+With auto-approval disabled, the agent will pause and request confirmation before executing potentially dangerous operations (like shell commands or file writes).
+
+**How It Works:**
+
+The auto-approval system uses a `BeforeToolCallEvent` hook that automatically approves all tool calls. When enabled, the hook logs each tool call but allows it to proceed without interruption.
+
+### System Prompt
+
+The agent comes with a comprehensive system prompt (defined in `prompts.py`) that configures it as an autonomous development and program solving agent. The prompt instructs the agent to:
+
+- Analyze requirements and plan solutions methodically
+- Write clean, maintainable code with proper error handling
+- Test implementations thoroughly and iterate on failures
+- Use file tools effectively to read, write, and modify code
+- Work step-by-step through development tasks
+- Debug issues by analyzing errors and applying fixes
+
+**Viewing the System Prompt:**
+```python
+from prompts import DEVELOPMENT_AGENT_SYSTEM_PROMPT
+print(DEVELOPMENT_AGENT_SYSTEM_PROMPT)
+```
+
+**Customizing the System Prompt:**
+
+You can provide your own system prompt when initializing the agent:
+
+```python
+custom_prompt = """You are a data analysis assistant.
+Use file tools to read datasets and write analysis results.
+Focus on statistical accuracy and clear visualizations."""
+
+agent = StrandsFileAgent(system_prompt=custom_prompt)
 ```
 
 ### Using Strands Directly
@@ -198,21 +262,23 @@ All of this happens automatically - you don't need to implement the agentic loop
 
 ```
 /app/
-├── agent.py           # Strands agent wrapper class
-├── main.py           # Entry point for interactive mode
-├── requirements.txt  # Python dependencies
-├── .gitignore        # Git ignore rules
-└── README.md         # This file
+├── agent.py              # Strands agent wrapper class
+├── main.py               # Entry point for interactive mode
+├── prompts.py            # System prompts for the agent
+├── requirements.txt      # Python dependencies
+├── .gitignore            # Git ignore rules
+└── README.md             # This file
 ```
 
 ## Configuration
 
 ### Default Settings
 
-- **Model**: `anthropic.claude-sonnet-4-5-v2:0`
+- **Model**: `anthropic.claude-3-5-sonnet-20240620-v1:0`
 - **Region**: `us-east-1`
 - **Streaming**: Enabled
-- **Tools**: `file_read`, `file_write`
+- **Auto-Approval**: Enabled (autonomous operation)
+- **Tools**: `file_read`, `file_write`, `shell`, `editor`, `think`, `journal`
 
 ### Available Bedrock Models
 
