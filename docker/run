@@ -1,0 +1,10 @@
+#!/bin/bash
+(set -o allexport && source 'docker/.env' && set +o allexport && bash docker/aws-authenticate.sh)
+IMAGE_TAG=$(echo "local-${PWD##*/}" | tr '[:upper:]' '[:lower:]')
+docker image inspect "$IMAGE_TAG" > /dev/null || docker build docker -t "$IMAGE_TAG"
+docker run --rm --cap-drop=all \
+  -v "$PWD:/app" \
+  -v "$PWD/docker:/app/docker:ro" \
+  --env-file ".env.temp" \
+  -e "AWS_DEFAULT_REGION=us-east-1" \
+  -it $(docker build -q docker -t "$IMAGE_TAG") $@
