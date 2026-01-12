@@ -36,7 +36,7 @@ os.environ["BYPASS_TOOL_CONSENT"] = "true"
 #         return
 
 
-class StrandsFileAgent:
+class MatrixCoderAgent:
     """A Strands agent with file read and write capabilities using AWS Bedrock."""
 
     def __init__(self, region_name: str = None, model_id: str = None, streaming: bool = True, system_prompt: str = None, auto_approve: bool = True):
@@ -106,18 +106,31 @@ class StrandsFileAgent:
         )
         logger.info("Strands agent initialized successfully")
 
-    def run(self, query: str) -> str:
+    def run(self, query: str, systemize_query: bool = True) -> str:
         """
         Run the agent with a query.
 
         Args:
             query: The user's query or instruction
+            systemize_query: If True, adds the query to the system prompt temporarily
+                           with <prompt> tags around it. Defaults to True.
 
         Returns:
             The agent's response as a string
         """
         logger.debug(f"Running agent with query: {query[:100]}{'...' if len(query) > 100 else ''}")
+        logger.debug(f"systemize_query={systemize_query}")
+
+        # Store original system prompt
+        original_system_prompt = self.agent.system_prompt
+
         try:
+            # If systemize_query is True, temporarily add query to system prompt
+            if systemize_query:
+                augmented_prompt = f"{original_system_prompt}\n\n<prompt>{query}</prompt>"
+                logger.debug("Augmenting system prompt with query")
+                self.agent.system_prompt = augmented_prompt
+
             result = self.agent(query)
             logger.debug(f"Agent returned result of type: {type(result).__name__}")
 
@@ -132,6 +145,10 @@ class StrandsFileAgent:
         except Exception as e:
             logger.error(f"Error running agent: {e}", exc_info=True)
             raise
+        finally:
+            # Always restore the original system prompt
+            self.agent.system_prompt = original_system_prompt
+            logger.debug("Restored original system prompt")
 
     def __call__(self, query: str) -> str:
         """
@@ -144,46 +161,3 @@ class StrandsFileAgent:
             The agent's response
         """
         return self.run(query)
-
-
-def main():
-    """Example usage of the Strands agent with AWS Bedrock."""
-    logger.info("Starting Strands File Agent interactive mode")
-    try:
-        # Create agent (uses current AWS credentials)
-        logger.debug("Creating StrandsFileAgent instance")
-        agent = StrandsFileAgent()
-    except Exception as e:
-        logger.error(f"Failed to initialize agent: {e}", exc_info=True)
-        print(f"Error initializing agent: {e}")
-        return
-
-    # Interactive loop
-    while True:
-        try:
-            user_input = input("> ").strip()
-
-            if user_input.lower() in ['quit', 'exit', 'q']:
-                logger.info("User requested exit")
-                print("Goodbye!")
-                break
-
-            if not user_input:
-                continue
-
-            logger.debug(f"User input: {user_input}")
-            # Run agent
-            response = agent(user_input)
-            print(f"\nAgent: {response}\n")
-
-        except KeyboardInterrupt:
-            logger.info("Interrupted by user (Ctrl+C)")
-            print("\n\nGoodbye!")
-            break
-        except Exception as e:
-            logger.error(f"Error in interactive loop: {e}", exc_info=True)
-            print(f"\nError: {e}\n")
-
-
-if __name__ == "__main__":
-    main()

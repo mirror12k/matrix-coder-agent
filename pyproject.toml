@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "matrix-coder-agent"
-version = "0.1.0"
+version = "0.2.0"
 authors = [
     {name = "Your Name", email = "your.email@example.com"},
 ]
@@ -49,7 +49,7 @@ Repository = "https://github.com/mirror12k/matrix-coder-agent"
 "Bug Tracker" = "https://github.com/mirror12k/matrix-coder-agent/issues"
 
 [project.scripts]
-matrix-coder-agent = "matrix_coder_agent.agent:main"
+matrix-coder-agent = "matrix_coder_agent.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

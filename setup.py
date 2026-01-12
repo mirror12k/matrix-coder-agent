@@ -11,7 +11,7 @@ long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="matrix-coder-agent",
-    version="0.1.0",
+    version="0.2.0",
     author="Mirror12k",
     description="Autonomous development agent using AWS Bedrock and Strands SDK",
     long_description=long_description,
@@ -54,7 +54,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "matrix-coder-agent=matrix_coder_agent.agent:main",
+            "matrix-coder-agent=matrix_coder_agent.cli:main",
         ],
     },
     keywords="ai agent aws bedrock strands autonomous development llm",

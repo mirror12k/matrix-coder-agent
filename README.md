@@ -1,4 +1,4 @@
-# Strands Bedrock Agent
+# Matrix Coder Agent
 
 A fully autonomous development and program solving agent built using the Strands SDK with AWS Bedrock backend.
 
