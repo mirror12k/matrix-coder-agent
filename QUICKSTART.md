@@ -12,6 +12,8 @@ pip install matrix-coder-agent
 
 ### Command Line
 
+#### Interactive Mode
+
 ```bash
 matrix-coder-agent
 ```
@@ -23,13 +25,27 @@ Then interact with natural language:
 > Write a hello world program in hello.py
 ```
 
+#### Direct Execution
+
+Run a single query and exit:
+
+```bash
+matrix-coder-agent -q "Create a hello world program in Python"
+```
+
+With a specific model:
+
+```bash
+matrix-coder-agent -m us.anthropic.claude-sonnet-4-5-20250929-v1:0 -q "Debug this code"
+```
+
 ### Python Code
 
 ```python
-from matrix_coder_agent import StrandsFileAgent
+from matrix_coder_agent import MatrixCoderAgent
 
 # Create agent
-agent = StrandsFileAgent()
+agent = MatrixCoderAgent()
 
 # Run a task
 response = agent("Create a simple web server in Python")
@@ -58,23 +74,30 @@ print(response)
 ### Custom Configuration
 
 ```python
-from matrix_coder_agent import StrandsFileAgent
+from matrix_coder_agent import MatrixCoderAgent
 
 # Different region
-agent = StrandsFileAgent(region_name="us-west-2")
+agent = MatrixCoderAgent(region_name="us-west-2")
 
 # Different model
-agent = StrandsFileAgent(
-    model_id="anthropic.claude-3-5-sonnet-20241022-v2:0"
+agent = MatrixCoderAgent(
+    model_id="us.anthropic.claude-sonnet-4-5-20250929-v1:0"
 )
 
 # Disable auto-approval (require human confirmation)
-agent = StrandsFileAgent(auto_approve=False)
+agent = MatrixCoderAgent(auto_approve=False)
 
 # Custom system prompt
-agent = StrandsFileAgent(
+agent = MatrixCoderAgent(
     system_prompt="You are a Python expert. Focus on clean, well-tested code."
 )
+
+# Control systemize_query behavior
+agent = MatrixCoderAgent()
+# Run with query added to system prompt (default)
+response = agent.run("Build a calculator", systemize_query=True)
+# Or run without adding to system prompt
+response = agent.run("Build a calculator", systemize_query=False)
 ```
 
 ## Common Use Cases
@@ -82,7 +105,7 @@ agent = StrandsFileAgent(
 ### 1. Building Programs
 
 ```python
-agent = StrandsFileAgent()
+agent = MatrixCoderAgent()
 response = agent("""
 Create a command-line todo list application in Python with:
 - Add tasks
@@ -96,7 +119,7 @@ Create a command-line todo list application in Python with:
 ### 2. Code Review
 
 ```python
-agent = StrandsFileAgent(
+agent = MatrixCoderAgent(
     system_prompt="You are a code reviewer. Focus on bugs and best practices."
 )
 response = agent("Review the code in app.py and suggest improvements")
@@ -105,14 +128,14 @@ response = agent("Review the code in app.py and suggest improvements")
 ### 3. Debugging
 
 ```python
-agent = StrandsFileAgent()
+agent = MatrixCoderAgent()
 response = agent("Find and fix the bug in calculator.py that's causing division errors")
 ```
 
 ### 4. Documentation
 
 ```python
-agent = StrandsFileAgent(
+agent = MatrixCoderAgent(
     system_prompt="You are a documentation expert. Write clear, comprehensive docs."
 )
 response = agent("Add docstrings and comments to all functions in utils.py")
@@ -204,12 +227,17 @@ export BYPASS_TOOL_CONSENT=true
 
 4. **Autonomous Mode**: Default is fully autonomous - perfect for batch processing
    ```python
-   agent = StrandsFileAgent(auto_approve=True)  # Default
+   agent = MatrixCoderAgent(auto_approve=True)  # Default
    ```
 
 5. **Human-in-Loop**: Enable for critical operations
    ```python
-   agent = StrandsFileAgent(auto_approve=False)
+   agent = MatrixCoderAgent(auto_approve=False)
+   ```
+
+6. **CLI Quick Execution**: Use -q flag for one-off tasks
+   ```bash
+   matrix-coder-agent -q "Create a requirements.txt with common packages"
    ```
 
 ## License

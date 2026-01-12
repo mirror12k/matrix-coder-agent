@@ -56,8 +56,10 @@ jobs:
     - name: Test package installation
       run: |
         pip install dist/*.whl
-        python -c "from matrix_coder_agent import StrandsFileAgent; print('Import successful!')"
+        python -c "from matrix_coder_agent import MatrixCoderAgent; print('MatrixCoderAgent import successful!')"
         python -c "from matrix_coder_agent import DEVELOPMENT_AGENT_SYSTEM_PROMPT; print('Prompt import successful!')"
+        python -c "from matrix_coder_agent.cli import main; print('CLI module import successful!')"
+        python -m matrix_coder_agent.cli --help
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4

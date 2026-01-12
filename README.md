@@ -84,6 +84,8 @@ This installs:
 
 ### Command Line Interface
 
+#### Interactive Mode
+
 After installation, run the agent in interactive mode:
 
 ```bash
@@ -93,7 +95,27 @@ matrix-coder-agent
 Or using Python module:
 
 ```bash
-python -m matrix_coder_agent.agent
+python -m matrix_coder_agent.cli
+```
+
+#### Direct Execution
+
+Run a single query and exit:
+
+```bash
+matrix-coder-agent -q "Create a hello world program in Python"
+```
+
+Specify a different model with the `-m` flag:
+
+```bash
+matrix-coder-agent -m us.anthropic.claude-sonnet-4-5-20250929-v1:0 -q "Debug this code"
+```
+
+Combine flags for custom configurations:
+
+```bash
+matrix-coder-agent -m us.anthropic.claude-opus-4-20250514-v1:0 -q "Refactor app.py for better performance"
 ```
 
 ### Example Commands
@@ -126,10 +148,10 @@ The Strands SDK automatically handles:
 You can also use the agent programmatically in your Python code:
 
 ```python
-from matrix_coder_agent import StrandsFileAgent
+from matrix_coder_agent import MatrixCoderAgent
 
 # Initialize the agent (uses current AWS credentials)
-agent = StrandsFileAgent(region_name="us-east-1")
+agent = MatrixCoderAgent(region_name="us-east-1")
 
 # Run a task
 response = agent("Read the file example.txt")
@@ -145,25 +167,32 @@ print(response)
 Customize the agent with different models or settings:
 
 ```python
-from matrix_coder_agent import StrandsFileAgent
+from matrix_coder_agent import MatrixCoderAgent
 
 # Use a different Bedrock model
-agent = StrandsFileAgent(
+agent = MatrixCoderAgent(
     region_name="us-west-2",
-    model_id="anthropic.claude-3-5-sonnet-20241022-v2:0",
+    model_id="us.anthropic.claude-sonnet-4-5-20250929-v1:0",
     streaming=True
 )
 
 # Disable streaming
-agent = StrandsFileAgent(streaming=False)
+agent = MatrixCoderAgent(streaming=False)
 
 # Custom system prompt
-agent = StrandsFileAgent(
+agent = MatrixCoderAgent(
     system_prompt="You are a specialized code reviewer. Focus on security and performance."
 )
 
 # Disable auto-approval (require human intervention for tool calls)
-agent = StrandsFileAgent(auto_approve=False)
+agent = MatrixCoderAgent(auto_approve=False)
+
+# Control systemize_query behavior
+agent = MatrixCoderAgent()
+# Run with query added to system prompt (default)
+response = agent.run("Build a calculator", systemize_query=True)
+# Or run without adding to system prompt
+response = agent.run("Build a calculator", systemize_query=False)
 ```
 
 ### Auto-Approval Mode
@@ -181,9 +210,9 @@ This is ideal for automated workflows, CI/CD pipelines, and scenarios where you 
 If you want human-in-the-loop control where the agent requests approval before executing tools:
 
 ```python
-from matrix_coder_agent import StrandsFileAgent
+from matrix_coder_agent import MatrixCoderAgent
 
-agent = StrandsFileAgent(auto_approve=False)
+agent = MatrixCoderAgent(auto_approve=False)
 ```
 
 With auto-approval disabled, the agent will pause and request confirmation before executing potentially dangerous operations (like shell commands or file writes).
@@ -215,13 +244,13 @@ print(DEVELOPMENT_AGENT_SYSTEM_PROMPT)
 You can provide your own system prompt when initializing the agent:
 
 ```python
-from matrix_coder_agent import StrandsFileAgent
+from matrix_coder_agent import MatrixCoderAgent
 
 custom_prompt = """You are a data analysis assistant.
 Use file tools to read datasets and write analysis results.
 Focus on statistical accuracy and clear visualizations."""
 
-agent = StrandsFileAgent(system_prompt=custom_prompt)
+agent = MatrixCoderAgent(system_prompt=custom_prompt)
 ```
 
 ### Using Strands Directly
