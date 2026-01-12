@@ -11,7 +11,7 @@ long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="matrix-coder-agent",
-    version="0.2.0",
+    version="0.2.1",
     author="Mirror12k",
     description="Autonomous development agent using AWS Bedrock and Strands SDK",
     long_description=long_description,
